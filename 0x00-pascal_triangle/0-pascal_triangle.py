@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 def print_triangle(triangle):
     """
     Print the Pascal's triangle.
