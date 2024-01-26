@@ -1,11 +1,14 @@
-#!/usr/bin/python3
+#!/usr/bin/python3i
+""" Write a script that reads stdin line by line and computes metrics"""
 import sys
+
 
 def print_stats(total_size, status_codes):
     print("File size: {}".format(total_size))
     for code, count in sorted(status_codes.items()):
         if count > 0:
             print("{}: {}".format(code, count))
+
 
 def parse_line(line, status_codes):
     try:
@@ -19,6 +22,7 @@ def parse_line(line, status_codes):
     except ValueError:
         pass
     return 0
+
 
 def main():
     total_size = 0
@@ -35,6 +39,7 @@ def main():
         pass
     finally:
         print_stats(total_size, status)
+
 
 if __name__ == "__main__":
     main()
