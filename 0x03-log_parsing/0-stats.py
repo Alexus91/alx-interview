@@ -1,45 +1,40 @@
 #!/usr/bin/python3
-"""
-A script: Reads standard input line by line and computes metrics
-"""
+import sys
 
+def print_stats(total_size, status_codes):
+    print("File size: {}".format(total_size))
+    for code, count in sorted(status_codes.items()):
+        if count > 0:
+            print("{}: {}".format(code, count))
 
-def parseLogs():
-    """
-    Reads logs from standard input and generates reports """
-    stdin = __import__('sys').stdin
-    lineNumber = 0
-    fileSize = 0
-    statusCodes = {'200': 0, '301': 0, '400': 0, '401': 0,
-                   '403': 0, '404': 0, '405': 0, '500': 0}
+def parse_line(line, status_codes):
     try:
-        for line in stdin:
-            lineNumber += 1
-            line = line.split()
-            try:
-                fileSize += int(line[-1])
-                status_code = line[-2]
-                if status_code in statusCodes:
-                    statusCodes[status_code] += 1
-            except (IndexError, ValueError):
-                pass
-            if lineNumber == 10:
-                report(fileSize, statusCodes)
-                lineNumber = 0
-        report(fileSize, statusCodes)
-    except KeyboardInterrupt as e:
-        report(fileSize, statusCodes)
-        raise
+        parts = line.split()
+        if len(parts) >= 9:
+            status_code = int(parts[-2])
+            file_size = int(parts[-1])
+            if status_code in status_codes:
+                status_codes[status_code] += 1
+            return file_size
+    except ValueError:
+        pass
+    return 0
 
+def main():
+    total_size = 0
+    status = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+    try:
+        line_count = 0
+        for line in sys.stdin:
+            file_size = parse_line(line.strip(), status)
+            total_size += file_size
+            line_count += 1
+            if line_count % 10 == 0:
+                print_stats(total_size, status)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        print_stats(total_size, status)
 
-def report(fileSize, statusCodes):
-    """
-    Prints generated report to standard output
-    """
-    print("File size: {}".format(fileSize))
-    for code in sorted(statusCodes.keys()):
-        print("{}: {}".format(code, statusCodes[code]))
-
-
-if __name__ == '__main__':
-    parseLogs()
+if __name__ == "__main__":
+    main()
