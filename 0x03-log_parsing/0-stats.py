@@ -20,9 +20,10 @@ def parse_line(line, status_codes):
             if status_code in status_codes:
                 status_codes[status_code] += 1
             return file_size
-    except ValueError:
+    except (ValueError, IndexError):
         pass
     return 0
+
 
 
 def main():
