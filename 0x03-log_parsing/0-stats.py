@@ -1,5 +1,6 @@
-#!/usr/bin/python3i
-""" Write a script that reads stdin line by line and computes metrics"""
+#!/usr/bin/python3
+""" script that reads stdin line by line and computes metrics """
+
 import sys
 
 
@@ -26,19 +27,19 @@ def parse_line(line, status_codes):
 
 def main():
     total_size = 0
-    status = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+    status_c = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
     try:
         line_count = 0
         for line in sys.stdin:
-            file_size = parse_line(line.strip(), status)
+            file_size = parse_line(line.strip(), status_c)
             total_size += file_size
             line_count += 1
             if line_count % 10 == 0:
-                print_stats(total_size, status)
+                print_stats(total_size, status_c)
     except KeyboardInterrupt:
         pass
     finally:
-        print_stats(total_size, status)
+        print_stats(total_size, status_c)
 
 
 if __name__ == "__main__":
