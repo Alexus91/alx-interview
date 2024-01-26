@@ -6,9 +6,10 @@ import sys
 
 def print_stats(total_size, status_codes):
     print("File size: {}".format(total_size))
-    for code, count in sorted(status_codes.items()):
-        if count > 0:
-            print("{}: {}".format(code, count))
+    for code in sorted(status_codes.keys()):  # Sort keys to ensure ascending order
+        if status_codes[code] > 0:
+            print("{}: {}".format(code, status_codes[code]))
+
 
 
 def parse_line(line, status_codes):
