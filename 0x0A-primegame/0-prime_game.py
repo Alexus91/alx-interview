@@ -1,47 +1,39 @@
 #!/usr/bin/python3
-"""Prime Game """
-
-
-def is_prime(n):
-    """Check if a number is prime."""
-    if n <= 1:
-        return False
-    for i in range(2, int(n**0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
-
-
-def generate_primes(n):
-    """Generate all prime numbers up to n."""
-    primes = []
-    for num in range(2, n + 1):
-        if is_prime(num):
-            primes.append(num)
-    return primes
+"""Module for Prime Game"""
 
 
 def isWinner(x, nums):
-    """Determine the winner of the prime game."""
-    # Generate all primes up to the maximum value in nums
-    max_num = max(nums)
-    primes = generate_primes(max_num)
-
-    # Simulate the game for each round
-    maria_wins = 0
-    ben_wins = 0
-    for n in nums:
-        prime_count = sum(1 for prime in primes if prime <= n)
-        # If the count is odd, Maria wins; otherwise, Ben wins
-        if prime_count % 2 == 0:
-            ben_wins += 1
-        else:
-            maria_wins += 1
-
-    # Determine the winner based on the number of wins
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    """
+    Determines the winner of a set of prime number removal games."""
+    if x <= 0 or nums is None:
         return None
+    if x != len(nums):
+        return None
+    ben = 0
+    maria = 0
+    a = [1 for x in range(sorted(nums)[-1] + 1)]
+    a[0], a[1] = 0, 0
+    for i in range(2, len(a)):
+        rm_multiples(a, i)
+    for i in nums:
+        if sum(a[0:i + 1]) % 2 == 0:
+            ben += 1
+        else:
+            maria += 1
+    if ben > maria:
+        return "Ben"
+    if maria > ben:
+        return "Maria"
+    return None
+
+
+def rm_multiples(ls, x):
+    """
+    Removes multiples of a prime number from an array of possible prime
+    numbers.
+    """
+    for i in range(2, len(ls)):
+        try:
+            ls[i * x] = 0
+        except (ValueError, IndexError):
+            break
